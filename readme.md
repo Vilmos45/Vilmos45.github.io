@@ -1,5 +1,5 @@
 Page chooser:
     index.html
 Pong:
-    game: Pong/game.html
-    settings: Pong/index.html
+    game: pong/game.html
+    settings: pong/index.html
