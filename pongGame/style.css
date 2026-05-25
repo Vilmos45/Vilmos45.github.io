@@ -1,3 +1,8 @@
+*{
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
 body {
     color: white;
     background-color: rgb(23, 39, 39);
@@ -5,11 +10,6 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding: 1vh;
-}
-
-*{
-    box-sizing: border-box;
-    overscroll-behavior: none;
 }
 
 #game_screen{

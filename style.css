@@ -1,0 +1,13 @@
+*{
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
+body {
+    color: rgb(119, 255, 255);
+    background-color: rgb(23, 39, 39);
+    display: grid block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1vh;
+}
