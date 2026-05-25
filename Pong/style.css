@@ -1,0 +1,75 @@
+body {
+    color: white;
+    background-color: rgb(23, 39, 39);
+    display: grid block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1vh;
+}
+
+*{
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
+#game_screen{
+    position: relative;
+    height: 80vh;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(68, 100, 100);
+    border: 0.4vh;
+    border-style: solid;
+    border-top: 0;
+    border-bottom: 0;
+    border-color: rgb(148, 148, 148);
+    overflow: hidden;
+}
+
+#labda{
+    height: 5vh;
+    width: 5vh;
+    border-radius: 50%;
+    background-color: whitesmoke;
+}
+
+#labda, .uto{
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    position: absolute;
+}
+
+.uto{
+    width: 3vh;
+    height: 20vh;
+}
+
+#uto1{
+    background-color: blue;
+}
+#uto2{
+    background-color: red;
+}
+.text{
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#felezovonal {
+    transform: rotate(90deg);
+    height: 0.3%;
+    background:
+    repeating-linear-gradient(90deg, #ffffff 0 5px,#ffffff00 0 7px)
+}
+
+h2{
+    text-decoration: underline;
+}
+
+h5, h2{
+    margin: 0.5%;
+}
