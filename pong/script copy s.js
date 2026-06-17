@@ -3,7 +3,7 @@ let ballSpeed = 8;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
-let aispeed = 3.25 //3.25 by default (lower values, makes the ai faster)
+let dir = 1; // 1 jobbra -1 balra
 
 /*--- Please do NOT modify anything below this line ---*/
 const scoreDiv = document.getElementById("score");
@@ -147,21 +147,22 @@ function movBall() {
         Vx = (getRand(Math.random() - 0.5) * ballSpeed);
 
     if (Vy === 0)
-        Vy = (getRand(Math.random() - 0.5) * (ballSpeed/10)*5);
+        Vy = (getRand(Math.random() - 0.5) * (ballSpeed/4)*5);
 
     let newTop = (parseInt(getComputedStyle(labda).top) || 0) + Vy;
     let newLeft = (parseInt(getComputedStyle(labda).left) || 0) + Vx;
+    Vx += dir * 0.5;
 
     const maxTop = GameScreen.clientHeight - labda.offsetHeight;
 
     // Felső / alsó fal
     if (newTop <= 0) {
-        newTop = 0;
+        newTop = parseInt(getComputedStyle(uto1).top);
         Vy *= -Math.random()/2 - 0.75; //-1
     }
 
     if (newTop >= maxTop) {
-        newTop = maxTop;
+        newTop = parseInt(getComputedStyle(uto2).top);
         Vy *= -Math.random()/2 - 0.75; //-1
     }
 
@@ -175,7 +176,8 @@ function movBall() {
         newTop <= uto1Top + uto1.offsetHeight
     ) {
         newLeft = uto1Left + uto1.offsetWidth;
-        Vx *= -Math.random()/2 - 0.75; //-1
+        Vx = -dir * 0.5;
+        dir = -dir;
     }
 
     // Ütő 2 collision
@@ -188,7 +190,8 @@ function movBall() {
         newTop <= uto2Top + uto2.offsetHeight
     ) {
         newLeft = uto2Left - labda.offsetWidth;
-        Vx *= -Math.random()/2 - 0.75;
+        Vx = -dir * 0.5;
+        dir = -dir;
     }
 
     // Bal / jobb fal (pont)
@@ -225,35 +228,10 @@ function movBall() {
     labda.style.left = newLeft + "px";
 }
 
-function getKozep(elem) {
-    return parseInt(getComputedStyle(elem).top) + elem.offsetHeight / 2;
-}
-
-function movUto1ai() {
-    let labdaKozep = getKozep(labda);
-    if (labdaKozep >= GameScreen.clientWidth/2) return;
-
-    let newTop = parseInt(getComputedStyle(uto1).top);
-    let utoKozep = getKozep(uto1);
-
-    if (labdaKozep + uto1.offsetHeight/4 > utoKozep) {
-        newTop += sensitivity/aispeed;
-    } else if (labdaKozep - uto1.offsetHeight/4< utoKozep) {
-        newTop -= sensitivity/aispeed;
-    }
-
-    if (newTop < 0) newTop = 0;
-    let maxTop = GameScreen.clientHeight - uto1.offsetHeight;
-    if (newTop > maxTop) newTop = maxTop;
-
-    uto1.style.top = newTop + "px";
-}
-
 setup();
 setInterval(() => {
   if (InGame) {
-    movPlayer();
-    movUto1ai();//comment to 2 player, uncomment for 1
+    movPlayer();//comment to 2 player
     movBall();
   }
 }, 10000 / gameSpeed);
@@ -269,40 +247,4 @@ addEventListener("keydown", function (e) {
     if (e.key === "ArrowUp") up(uto2)
     if (e.key === "ArrowDown") down(uto2)
 }, true);
-
-
-
-function movBall(){
-    if (Vx === 0)
-        Vx = Math.floor((Math.random()-0.5) * ballSpeed);
-    if (Vy === 0)
-        Vy = Math.floor((Math.random()-0.5) * ballSpeed);
-
-    let newTop = ((parseInt(getComputedStyle(labda).top) || 0) + Vy);
-    let newLeft = ((parseInt(getComputedStyle(labda).left) || 0) + Vx);
-    const maxTop = GameScreen.clientHeight;
-    const maxLeft = GameScreen.clientWidth - labda.offsetWidth;
-
-    if (newTop - labda.offsetHeight < 0){
-        Vy = 0;
-        newTop = labda.offsetHeight;
-    }else if (newTop - labda.offsetHeight > maxTop){
-        Vy = 0;
-        newTop = maxTop;
-    }else if (newLeft < 0){
-        Vx = 0;
-        scoreb++;
-        newLeft = 0;
-    }else if (newLeft + labda.offsetHeight > maxLeft){
-        Vx = 0;
-        scorer++;
-        newLeft = maxLeft;
-    }
-
-    labda.style.top = newTop + "px";
-    labda.style.left = newLeft + "px";
-
-    console.log("ball moved at: " + Vx + ", " + Vy);
-}
-
 */
