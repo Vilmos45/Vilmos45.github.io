@@ -5,18 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <link rel="icon" type="image/x-icon" href="src/Pong_ico.png">
     <title>Pong-Game>Menu</title>
+    <script src="settings.js" defer></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="settings.css">
 </head>
 <body>
     <a href="game.html">Play</a>
     <a href="game.html">Local 2 players</a>
     <h2>Settings</h2>
-    <h5>Senstitivity: </h5>
-    <input>
-    <meter>50</meter>
-    <h5>Ball speed: </h5>
-    <h5>Game speed/refresh rate: </h5>
-    <h5>Max score: </h5>
-    <h5>Max time: </h5>
+
+    <label for="sens">Senstitivity: </label>
+    <input type="text" id="sens" name="sens"><br><br>
+    <label for="bspeed">Ball speed: </label>
+    <input type="text" id="bspeed" name="bspeed"><br><br>
+    <label for="gspeed">Game speed/refresh rate: </label>
+    <input type="text" id="gspeed" name="gspeed"><br><br>
+    <label for="mscore">Max score: </label>
+    <input type="text" id="mscore" name="mscore"><br><br>
+    <label for="mtime">Max time: </label>
+    <input type="text" id="mtime" name="mtime"><br><br>
+    <label for="aispeed">AI speed: </label>
+    <input type="text" id="aispeed" name="aispeed"><br><br>
+    <label for="ai">Enabel AI: </label>
+    <input type="checkbox" name="ai" id="ai"><br><br>
 </body>
 </html>

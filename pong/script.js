@@ -3,7 +3,8 @@ let ballSpeed = 8;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
-let aispeed = 3.25 //3.25 by default (lower values, makes the ai faster)
+let aiSpeed = 3.25; //3.25 by default (lower values, makes the ai faster)
+let ai = false; //false for local 2 player
 
 /*--- Please do NOT modify anything below this line ---*/
 const scoreDiv = document.getElementById("score");
@@ -15,8 +16,7 @@ const GameScreen = document.getElementById("game_screen");
 document.getElementById("felezovonal").style.left = GameScreen.clientWidth - document.getElementById("felezovonal").offsetWidth + "px";
 document.getElementById("felezovonal").style.top = GameScreen.clientHeight + "px";
 
-
-let scoreb= 0;
+let scoreb = 0;
 let scorer = 0;
 let InGame = true;
 let Vx = 0;
@@ -27,7 +27,40 @@ let rs = true;
 let ru = true;
 let rd = true;
 
+function getSettings(){
+    let tmp = parseInt(localStorage.getItem("sens"));
+    if (!Number.isNaN(tmp))
+        sensitivity = tmp;
+
+    tmp = parseInt(localStorage.getItem("bspeed"));
+    if (!Number.isNaN(tmp))
+        ballSpeed = tmp;
+
+    tmp = parseInt(localStorage.getItem("gspeed"));
+    if (!Number.isNaN(tmp))
+        gameSpeed = tmp;
+
+    tmp = parseInt(localStorage.getItem("mscore"));
+    if (!Number.isNaN(tmp))
+        maxScore = tmp;
+
+    tmp = parseInt(localStorage.getItem("mtime"));
+    if (!Number.isNaN(tmp))
+        maxTime = tmp;
+
+    tmp = localStorage.getItem("ai");
+    if (!Number.isNaN(tmp))
+        ai = tmp;
+
+    tmp = parseInt(localStorage.getItem("aispeed"));
+    if (!Number.isNaN(tmp))
+        aiSpeed = tmp;
+}
+
 function setup(){
+    InGame = false;
+    getSettings();
+
     labda.style.top = (GameScreen.clientHeight - labda.offsetHeight)/2 + "px";
     labda.style.left = (GameScreen.clientWidth - labda.offsetWidth)/2 + "px";
 
@@ -46,8 +79,7 @@ function setup(){
     Vy = 0;
     scoreb = 0;
     scorer = 0;
-    InGame = false;
-    console.log("|---------Settings---------|\nsensitivity: " + sensitivity + "\nball speed: " + ballSpeed + "\ngame speed: " + gameSpeed + "\n|--------------------------|");
+    console.log("|---------Settings---------|\nsensitivity: " + sensitivity + "\nball speed: " + ballSpeed + "\ngame speed: " + gameSpeed + "\nmax score: " + maxScore + "\nmax time: " + maxTime+ "\nai speed: " + aiSpeed + "\n|--------------------------|");
     console.log("Game set!");
 }
 
@@ -237,9 +269,9 @@ function movUto1ai() {
     let utoKozep = getKozep(uto1);
 
     if (labdaKozep + uto1.offsetHeight/4 > utoKozep) {
-        newTop += sensitivity/aispeed;
+        newTop += sensitivity/aiSpeed;
     } else if (labdaKozep - uto1.offsetHeight/4< utoKozep) {
-        newTop -= sensitivity/aispeed;
+        newTop -= sensitivity/aiSpeed;
     }
 
     if (newTop < 0) newTop = 0;
@@ -253,7 +285,8 @@ setup();
 setInterval(() => {
   if (InGame) {
     movPlayer();
-    movUto1ai();//comment to 2 player, uncomment for 1
+    if (ai)
+        movUto1ai();//comment to 2 player, uncomment for 1
     movBall();
   }
 }, 10000 / gameSpeed);
