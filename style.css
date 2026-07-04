@@ -4,10 +4,23 @@
 }
 
 body {
-    color: rgb(119, 255, 255);
+    color: #2196f3;
     background-color: rgb(23, 39, 39);
     display: grid block;
     margin-left: auto;
     margin-right: auto;
     padding: 1vh;
+    font-size: x-large;
+}
+
+a:link{
+    color: #2196f3;
+}
+
+a:visited{
+    color: #2fa1ff;
+}
+
+a:hover{
+    color: #4827ff;
 }

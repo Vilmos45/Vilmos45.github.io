@@ -233,7 +233,11 @@ function movBall() {
         scoreDiv.textContent = scoreb + ":" + scorer;
         if (scorer >= maxScore)
         {
-            sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
+            console.log("Red won: " + scoreb + ":" + scorer);
+            if (ai)
+                sendAlert("!You won!\n" + scoreb + ":" + scorer);
+            else
+                sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
             setup;
         }
         newLeft = (GameScreen.clientWidth - labda.offsetWidth) / 2;
@@ -247,8 +251,11 @@ function movBall() {
         scoreDiv.textContent = scoreb + ":" + scorer;
         if (scoreb >= maxScore)
         {
-            send
-            ("!!!Blue won!!!\n" + scoreb + ":" + scorer);
+            console.log("Blue won: " + scoreb + ":" + scorer);
+            if (ai)
+                sendAlert("You lost\n" + scoreb + ":" + scorer);
+            else
+                sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
             setup;
         }
         newLeft = (GameScreen.clientWidth - labda.offsetWidth) / 2;
@@ -286,6 +293,32 @@ function movUto1ai() {
 }
 
 setup();
+if (maxTime > 0){
+    setInterval(() => {
+        if (scoreb >= maxScore)
+        {
+            console.log("Blue won: " + scoreb + ":" + scorer);
+            if (ai)
+                sendAlert("You lost\n" + scoreb + ":" + scorer);
+            else
+                sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
+            setup;
+        } else if (scorer >= maxScore)
+        {
+            console.log("Red won: " + scoreb + ":" + scorer);
+            if (ai)
+                sendAlert("!You won!\n" + scoreb + ":" + scorer);
+            else
+                sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
+            setup;
+        } else{
+            console.log("Tie: " + scoreb + ":" + scorer);
+                sendAlert("!Tie!\n" + scoreb + ":" + scorer);
+            setup;
+        }
+    }, maxTime*1000);
+}
+
 if (ai){
     setInterval(() => {
         if (InGame) {
@@ -303,49 +336,3 @@ if (ai){
     }, 10000 / gameSpeed);
 }
 //sebesség, randomizalas
-
-/*
-addEventListener("keydown", function (e) {
-    e.preventDefault();
-    if (e.key === "Enter" || e.key === " ") InGame = !InGame;
-    if (!InGame) return;
-    if (e.key === "w") up(uto1)
-    if (e.key === "s") down(uto1)
-    if (e.key === "ArrowUp") up(uto2)
-    if (e.key === "ArrowDown") down(uto2)
-}, true);
-
-
-
-function movBall(){
-    if (Vx === 0)
-        Vx = Math.floor((Math.random()-0.5) * ballSpeed);
-    if (Vy === 0)
-        Vy = Math.floor((Math.random()-0.5) * ballSpeed);
-
-    let newTop = ((parseInt(getComputedStyle(labda).top) || 0) + Vy);
-    let newLeft = ((parseInt(getComputedStyle(labda).left) || 0) + Vx);
-    const maxTop = GameScreen.clientHeight;
-    const maxLeft = GameScreen.clientWidth - labda.offsetWidth;
-
-    if (newTop - labda.offsetHeight < 0){
-        Vy = 0;
-        newTop = labda.offsetHeight;
-    }else if (newTop - labda.offsetHeight > maxTop){
-        Vy = 0;
-        newTop = maxTop;
-    }else if (newLeft < 0){
-        Vx = 0;
-        scoreb++;
-        newLeft = 0;
-    }else if (newLeft + labda.offsetHeight > maxLeft){
-        Vx = 0;
-        scorer++;
-        newLeft = maxLeft;
-    }
-
-    labda.style.top = newTop + "px";
-    labda.style.left = newLeft + "px";
-
-    console.log("ball moved at: " + Vx + ", " + Vy);
-}*/
