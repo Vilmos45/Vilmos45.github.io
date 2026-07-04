@@ -4,7 +4,7 @@ let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
 let aiSpeed = 3.25; //3.25 by default (lower values, makes the ai faster)
-let ai = false; //false for local 2 player
+let ai = false; //true for single player
 
 /*--- Please do NOT modify anything below this line ---*/
 const scoreDiv = document.getElementById("score");
@@ -28,7 +28,14 @@ let ru = true;
 let rd = true;
 
 function getSettings(){
-    let tmp = parseInt(localStorage.getItem("sens"));
+    let tmp = parseInt(localStorage.getItem("singlep"));
+    if (tmp === "checked")
+        ai = true;
+
+    console.log(tmp);
+    
+
+    tmp = localStorage.getItem("sens");
     if (!Number.isNaN(tmp))
         sensitivity = tmp;
 

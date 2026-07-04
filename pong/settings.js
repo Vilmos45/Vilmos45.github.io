@@ -3,26 +3,40 @@ let bspeed = document.getElementById("bspeed");
 let gspeed = document.getElementById("gspeed");
 let mscore = document.getElementById("mscore");
 let mtime = document.getElementById("mtime");
-let ai = document.getElementById("ai");
-let aiSpeed = document.getElementById("aispeed");
+let aispeed = document.getElementById("aispeed");
+let singlep = document.getElementById("singlep");
 
-function saveSettings(){
-    localStorage.clear();
-    localStorage.setItem("sens", sens.textContent);
-    localStorage.setItem("bspeed", bspeed.textContent);
-    localStorage.setItem("gspeed", gspeed.textContent);
-    localStorage.setItem("mscore", mscore.textContent);
-    localStorage.setItem("mtime", mtime.textContent);
-    localStorage.setItem("ai", ai.textContent);
-    localStorage.setItem("aispeed", aiSpeed.textContent);
-}
-
-
+main();
 setInterval(() => {
     saveSettings();
+}, 10000);
+
+function main(){
+    singlep.defaultValue = "checked";
+    sens.defaultValue = "20";
+    bspeed.defaultValue = "8";   
+    gspeed.defaultValue = "270";  
+    mscore.defaultValue = "10"; 
+    mtime.defaultValue = "-1";
+    aispeed.defaultValue = "3.25";
+}
+
+function saveSettings(){
+    localStorage.setItem("singlep", singlep.value); //checked/interminate/""
+    console.log(singlep.value);
+    
+    localStorage.clear();
+    localStorage.setItem("sens", sens.value);
+    localStorage.setItem("bspeed", bspeed);
+    localStorage.setItem("gspeed", gspeed.value);
+    localStorage.setItem("mscore", mscore.value);
+    localStorage.setItem("mtime", mtime.value);
+    aispeed.value = aispeed.value.replace(",",".");
+    localStorage.setItem("aispeed", aispeed.value);
+
+    console.log("|---------Settings---------|\nsensitivity: " + sens.value + "\nball speed: " + bspeed.value + "\ngame speed: " + gspeed.value + "\nmax score: " + mscore.value + "\nmax time: " + mtime + "\nai speed: " + aispeed + "\n|--------------------------|");
     console.log("game saved");
-    console.log(sens.textContent);
-},1000);
+}
 
 /*
 setItem(key, value) } 	Store data (string only)} 	localStorage.setItem('score', 100)}
