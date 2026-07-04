@@ -3,8 +3,8 @@ let ballSpeed = 8;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
-let aiSpeed = 3.25; //3.25 by default (lower values, makes the ai faster)
-let ai = false; //true for single player
+let aiSpeed = 3.75; //3.25 by default (lower values, makes the ai faster)
+let ai = true; //true for single player, false by def
 
 /*--- Please do NOT modify anything below this line ---*/
 const scoreDiv = document.getElementById("score");
@@ -13,8 +13,8 @@ const uto1 = document.getElementById("uto1");
 const uto2 = document.getElementById("uto2");
 const GameScreen = document.getElementById("game_screen");
 
-document.getElementById("felezovonal").style.left = GameScreen.clientWidth - document.getElementById("felezovonal").offsetWidth + "px";
-document.getElementById("felezovonal").style.top = GameScreen.clientHeight + "px";
+//document.getElementById("felezovonal").style.left = GameScreen.clientWidth - document.getElementById("felezovonal").offsetWidth + "px";
+//document.getElementById("felezovonal").style.top = GameScreen.clientHeight + "px";
 
 let scoreb = 0;
 let scorer = 0;
@@ -28,39 +28,37 @@ let ru = true;
 let rd = true;
 
 function getSettings(){
-    let tmp = parseInt(localStorage.getItem("singlep"));
-    if (tmp === "checked")
+    if (localStorage.getItem("singlep") === "true")
         ai = true;
+    console.log(localStorage.getItem("singlep") + " " + ai);
 
-    console.log(tmp);
-    
 
-    tmp = localStorage.getItem("sens");
-    if (!Number.isNaN(tmp))
+    let tmp = localStorage.getItem("sens");
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         sensitivity = tmp;
 
     tmp = parseInt(localStorage.getItem("bspeed"));
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         ballSpeed = tmp;
 
     tmp = parseInt(localStorage.getItem("gspeed"));
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         gameSpeed = tmp;
 
     tmp = parseInt(localStorage.getItem("mscore"));
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         maxScore = tmp;
 
     tmp = parseInt(localStorage.getItem("mtime"));
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         maxTime = tmp;
 
     tmp = localStorage.getItem("ai");
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         ai = tmp;
 
     tmp = parseInt(localStorage.getItem("aispeed"));
-    if (!Number.isNaN(tmp))
+    if (!Number.isNaN(tmp) && Number.isInteger(tmp))
         aiSpeed = tmp;
 }
 
@@ -181,7 +179,6 @@ function sendAlert(msg){
 }
 
 function movBall() {
-
     if (Vx === 0)
         Vx = (getRand(Math.random() - 0.5) * ballSpeed);
 
@@ -289,14 +286,22 @@ function movUto1ai() {
 }
 
 setup();
-setInterval(() => {
-  if (InGame) {
-    movPlayer();
-    if (ai)
-        movUto1ai();//comment to 2 player, uncomment for 1
-    movBall();
-  }
-}, 10000 / gameSpeed);
+if (ai){
+    setInterval(() => {
+        if (InGame) {
+            movPlayer();
+            movUto1ai();
+            movBall();
+        }
+    }, 10000 / gameSpeed);
+}else{
+    setInterval(() => {
+    if (InGame) {
+        movPlayer();
+        movBall();
+    }
+    }, 10000 / gameSpeed);
+}
 //sebesség, randomizalas
 
 /*
@@ -343,6 +348,4 @@ function movBall(){
     labda.style.left = newLeft + "px";
 
     console.log("ball moved at: " + Vx + ", " + Vy);
-}
-
-*/
+}*/

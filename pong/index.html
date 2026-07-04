@@ -17,19 +17,20 @@
     <input type="checkbox" id="singlep" name="singlep" value="checked" onchange="saveSettings()"><br><br>
 
     <h2>Settings</h2>
-
-    <label for="sens">Senstitivity: </label>
-    <input type="text" id="sens" name="sens" value="20" onchange="saveSettings()"><br><br>
-    <label for="bspeed">Ball speed: </label>
-    <input type="text" id="bspeed" name="bspeed" value="8" onchange="saveSettings()"><br><br>
-    <label for="gspeed">Game speed/refresh rate: </label>
-    <input type="text" id="gspeed" name="gspeed" value="270" onchange="saveSettings()"><br><br>
-    <label for="mscore">Max score: </label>
-    <input type="text" id="mscore" name="mscore" value="10" onchange="saveSettings()"><br><br>
-    <label for="mtime">Max time: </label>
-    <input type="text" id="mtime" name="mtime" value="-1" onchange="saveSettings()"><br><br>
-    <label for="aispeed">AI speed: </label>
-    <input type="text" id="aispeed" name="aispeed" value="3.25" onchange="saveSettings()"><br><br>
+        <div id="settings">
+        <label for="sens">Senstitivity: </label>
+        <input type="text" id="sens" name="sens" value="20" onchange="saveSettings()"><br><br>
+        <label for="bspeed">Ball speed: </label>
+        <input type="text" id="bspeed" name="bspeed" value="8" onchange="saveSettings()"><br><br>
+        <label for="gspeed">Game speed/refresh rate: </label>
+        <input type="text" id="gspeed" name="gspeed" value="270" onchange="saveSettings()"><br><br>
+        <label for="mscore">Max score: </label>
+        <input type="text" id="mscore" name="mscore" value="10" onchange="saveSettings()"><br><br>
+        <label for="mtime">Max time: </label>
+        <input type="text" id="mtime" name="mtime" value="-1" onchange="saveSettings()"><br><br>
+        <label for="aispeed">AI speed: </label>
+        <input type="text" id="aispeed" name="aispeed" value="3.25" onchange="saveSettings()"><br><br>
+    </div>
 
     <div id="instructions">
         <h1>Controls</h1>
@@ -37,7 +38,7 @@
         <h4>First player</h4>
         <h5>W: up</h5>
         <h5>S: down</h5>
-        <h4>Second player (only in two players mode)</h4>
+        <h4>Second player (default in single player)</h4>
         <h5>PgUp (arrow up): up</h5>
         <h5>PgDn (arrow down): down</h5>
     </div>
