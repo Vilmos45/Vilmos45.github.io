@@ -1,0 +1,30 @@
+*{
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
+body {
+    color: #2196f3;
+    background-color: rgb(23, 39, 39);
+    display: flex block;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1vh;
+}
+
+.row{
+    display: flex block;
+}
+
+.cell{
+    width: 50px;
+    height: 50px;
+    background-color: #2196f3;
+    display: flex;
+    justify-content: center;
+}
+
+.black{
+    background-color: blue;
+}
