@@ -4,7 +4,7 @@
 }
 
 body {
-    color: #2196f3;
+    color: #c2e4ff;
     background-color: rgb(23, 39, 39);
     display: flex block;
     justify-content: center;
@@ -13,8 +13,29 @@ body {
     padding: 1vh;
 }
 
+.cell img {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
+    user-select: none;
+    pointer-events: none;
+}
+
 .row{
     display: flex block;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    width: fit-content;
+    border: 2px solid black;
 }
 
 .cell{
@@ -23,6 +44,7 @@ body {
     background-color: #2196f3;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .black{
