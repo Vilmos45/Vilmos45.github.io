@@ -7,10 +7,10 @@ let cpiece = {piece: null, y: null, x: null};
 const board = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
     [{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},[null, false, null]],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},[null, false, null]],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},[null, false, null]],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},[null, false, null]],
+    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
+    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
+    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
+    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
     [{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false}],
     [{piece: "wr", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wq", reachable: false, moved: false},{piece: "wk", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wr", reachable: false, moved: false}]
 ];
@@ -47,7 +47,6 @@ function renderBoard() {
             cell.dataset.x = x;
             cell.dataset.y = y;
 
-
             const piece = (board[y][x].piece === null) ? false : board[y][x].piece;
 
             if (piece) {
@@ -56,6 +55,9 @@ function renderBoard() {
                 img.alt = piece;
 
                 cell.appendChild(img);
+
+                if (cpiece && cpiece.x === x && cpiece.y === y)
+                    cell.classList.add("selected");
 
                 cell.addEventListener("click", () => manageClick(cell, piece, x, y));
             }
@@ -79,40 +81,49 @@ function setNotReachable(){
 function mgReachableCell(x, y){
     board[cpiece.y][cpiece.x].piece = null;
     board[y][x].piece = cpiece.piece;
-    //cpiece = null;
+    board[y][x].moved = true;
+    if (y === 7 && cpiece.piece.charAt(1) === "p")
+        userChosePieceForPawn(x, y);
     turn = !turn;
     setNotReachable();
     render();
 }
 
+function isWhite(y, x) {
+    return board[y][x].piece?.charAt(0) === "w";
+}
+
+function isWhitePiece(piece) {
+    return piece?.charAt(0) === "w";
+}
+
 function manageClick(cell, piece, x, y){
     console.log("selected " + piece, x, y, cell);
+    if (!turn && isWhitePiece(piece))
+        return;
+    if (turn && !isWhitePiece(piece))
+        return;
+    setNotReachable();
     cpiece.piece = piece;
     cpiece.x = x;
     cpiece.y = y;
-    cell.classList.add("selected");
-    if (turn){
-        switch (piece) {
-            case "wp":
-                if (board[y][x].moved === false)
-                    board[y - 2][x].reachable = true;
-                board[y - 1][x].reachable = true;
-                break;
-            default:
-                break;
-        }
-    } else {
-        switch (piece) {
-            case "bp":
-                if (!board[y][x].moved)
-                    board[y + 2][x].reachable = true;
-                board[y + 1][x].reachable = true;
-                break;
-            default:
-                break;
-        }
+    switch (piece) {
+        case "wp":
+        case "bp":
+            movep(x, y);
+            break;
+        case "wr":
+        case "br":
+            mover(x, y);
+            break;
+        default:
+            return;
     }
     renderBoard();
+}
+
+function userChosePieceForPawn(x, y){
+    
 }
 
 function render(){
@@ -124,3 +135,60 @@ function render(){
 }
 
 render();
+
+
+function movep(x, y){
+    let co = isWhite(y, x);
+    let dir = co ? -1 :  1;
+
+    if (board[y + dir][x].piece === null){
+        if (!board[y][x].moved && board[y + dir * 2][x].piece === null)
+            board[y + dir * 2][x].reachable = true;
+        board[y + dir][x].reachable = true;
+    }
+    if (x > 0 && board[y+dir][x-1].piece != null && co != isWhite(y+dir, x-1))
+        board[y+dir][x-1].reachable = true;
+    if (x < 7 && board[y+dir][x+1].piece != null && co != isWhite(y+dir, x+1))
+        board[y+dir][x+1].reachable = true;
+}
+
+function mover(x, y){
+    let co = isWhite(y, x);
+
+    for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
+        if (board[y][xi].piece === null)
+            board[y][xi].reachable = true;
+        else{
+            if (co != isWhite(y, xi))
+                board[y][xi].reachable = true;
+            break;
+        }
+    }
+    for (let xi = x - 1; xi >= 0; xi--) {
+        if (board[y][xi].piece === null)
+            board[y][xi].reachable = true;
+        else{
+            if (co != isWhite(y, xi))
+                board[y][xi].reachable = true;
+            break;
+        }
+    }
+    for (let yi = y + 1; yi < 8; yi++) {
+        if (board[yi][x].piece === null)
+            board[yi][x].reachable = true;
+        else{
+            if (co != isWhite(yi, x))
+                board[yi][x].reachable = true;
+            break;
+        }
+    }
+    for (let yi = y - 1; yi >= 0; yi--) {
+        if (board[yi][x].piece === null)
+            board[yi][x].reachable = true;
+        else{
+            if (co != isWhite(yi, x))
+                board[yi][x].reachable = true;
+            break;
+        }
+    }
+}
