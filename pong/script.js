@@ -4,7 +4,7 @@ let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
 let aiSpeed = 3.75; //3.25 by default (lower values, makes the ai faster)
-let ai = true; //true for single player, false by def
+let ai = false; //true for single player, false by def
 
 /*--- Please do NOT modify anything below this line ---*/
 const scoreDiv = document.getElementById("score");
@@ -97,13 +97,15 @@ function keyDownHandler(e) {
     if (!InGame) return;
     switch (e.key){
         case "w":
-            rw = false;
+            if (!ai)
+                rw = false;
             break;
         case "ArrowUp":
             ru = false;
             break;
         case "s":
-            rs = false;
+            if (!ai)
+                rs = false;
             break;
         case "ArrowDown":
             rd = false;
@@ -118,13 +120,15 @@ function keyUpHandler(e) {
     switch (e.key)
     {
         case "w":
-            rw = true;
+            if (!ai)
+                rw = true;
             break;
         case "ArrowUp":
             ru = true;
             break;
         case "s":
-            rs = true;
+            if (!ai)
+                rs = true;
             break;
         case "ArrowDown":
             rd = true;

@@ -30,6 +30,11 @@ body {
     display: flex block;
 }
 
+#turn{
+    width: 20px;
+    height: 20px;
+}
+
 #board {
     display: grid;
     grid-template-columns: repeat(8, 50px);
@@ -49,4 +54,20 @@ body {
 
 .black{
     background-color: blue;
+}
+
+.playable{
+    background-color:rgba(220, 20, 60, 0.329);
+}
+
+.selected{
+    background-color: rgb(73, 138, 8);
+}
+
+.reachable{
+    background-color: #98cbf3;
+}
+
+.reachable + .black{
+    background-color: rgb(116, 116, 255);
 }
