@@ -1,5 +1,5 @@
-import { moveb, movep, moveq, mover, movek, moven } from "./moves.js";
-export {board, turn};
+import { moveb, movep, moveq, mover, movek, moven, isKingAttacked} from "./moves.js";
+export {board, turn, isInDanger};
 
 window.chosedfp = chosedfp;
 
@@ -128,13 +128,15 @@ async function mgReachableCell(x, y){
         listdisplay(pfpawn, "block");
         const piece = await choosePawn();
         board[y][x].piece = cpiece.piece.charAt(0) + piece;
-        console.log(cpiece.piece.charAt(0) + piece);
     }
     if (y === 7 && cpiece.piece.charAt(1) === "p")
         userChosePieceForPawn(x, y);
     turn = !turn;
     setNotReachable();
     render();
+    turnElement.style.borderColor = (turn) ? "black" : "white";
+    if (isKingAttacked(turn))
+        turnElement.style.borderColor = "red";
 }
 
 function isWhitePiece(piece) {
@@ -151,7 +153,11 @@ function manageClick(cell, piece, x, y){
     cpiece.piece = piece;
     cpiece.x = x;
     cpiece.y = y;
-    switch (piece.charAt(1)) {
+    movePiece(piece, x, y);
+}
+
+function movePiece(p, x, y){
+    switch (p.charAt(1)) {
         case "p":
             movep(x, y);
             break;
@@ -176,8 +182,38 @@ function manageClick(cell, piece, x, y){
     renderBoard();
 }
 
-function userChosePieceForPawn(x, y){
-    
+function isWhite(y, x) {
+    return board[y][x].piece?.charAt(0) === "w";
+}
+
+function attackPiece(p, x, y){
+    if (p === null) return;
+    switch (p.charAt(1)) {
+        case "p":
+            let co = isWhite(y, x);
+            let dir = co ? -1 :  1;
+            if (y + dir >= 0 && y + dir < 8) {
+                if (x > 0)
+                    board[y + dir][x - 1].reachable = true;
+                if (x < 7)
+                    board[y + dir][x + 1].reachable = true;
+            }
+            break;
+        case "n":
+            moven(x, y);
+            break;
+        case "b":
+            moveb(x, y);
+            break;
+        case "r":
+            mover(x, y);
+            break;
+        case "q":
+            moveq(x, y);
+            break;
+        default:
+            return;
+    }
 }
 
 function render(){
@@ -186,6 +222,21 @@ function render(){
         turnElement.style.backgroundColor = "#ffffff";
     else
         turnElement.style.backgroundColor = "#000000";
+}
+
+function isInDanger(y, x, co){
+    let is = false;
+    setNotReachable();
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (board[i][j].piece != null && isWhitePiece(board[i][j].piece) !== co &&  board[i][j].piece.charAt(1) !== "k")
+                attackPiece(board[i][j].piece, j, i);
+        }
+    }
+    if (board[y][x].reachable)
+        is = true;
+    setNotReachable();
+    return is;
 }
 
 render();

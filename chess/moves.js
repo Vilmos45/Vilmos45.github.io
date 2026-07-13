@@ -1,5 +1,5 @@
-export {moveb, movep, moveq, mover, movek, moven};
-import {board, turn} from "./script.js";
+export {moveb, movep, moveq, mover, movek, moven, isKingAttacked};
+import {board, turn, isInDanger} from "./script.js";
 
 function logCount(){
     console.log(board.flat().filter(c => c.reachable).length);
@@ -127,21 +127,23 @@ function moveb(x, y){
 }
 
 function moveq(x, y){
-    console.log("queen should move");
     moveb(x, y);
-    console.log("moveb");
     mover(x, y);
-    console.log("mover");
 }
 
 function movek(x, y){
     let co = isWhite(y, x);
-
     const dirs = [
     [-1,-1], [-1,0], [-1,1],
     [ 0,-1],         [ 0,1],
     [ 1,-1], [ 1,0], [ 1,1]
     ];
+
+    let available = [
+        false, false, false,
+        false,        false,
+        false, false, false
+    ]
 
     function isKing(y, x) {
         if (y < 0 || y > 7 || x < 0 || x > 7)
@@ -165,7 +167,7 @@ function movek(x, y){
             isKing(yy + 1, xx - 1) ||
             isKing(yy - 1, xx + 1);
     }
-
+    let i = 0;
     for (const [dy, dx] of dirs) {
         const ny = y + dy;
         const nx = x + dx;
@@ -173,8 +175,18 @@ function movek(x, y){
         if (ny >= 0 && ny < 8 &&
           nx >= 0 && nx < 8 &&
           isAvailable(ny, nx, y, x) &&
-          !kingAround(ny, nx))
-            board[ny][nx].reachable = true;
+          !kingAround(ny, nx) && !isInDanger(ny, nx, co))
+            available[i] = true;
+            i++;
+    }
+    i = 0;
+    for (const [dy, dx] of dirs) {
+        const ny = y + dy;
+        const nx = x + dx;
+        if (ny >= 0 && ny < 8 &&
+          nx >= 0 && nx < 8)
+            board[ny][nx].reachable = available[i];
+        i++;
     }
 }
 
@@ -198,4 +210,18 @@ function moven(x, y){
           isAvailable(ny, nx, y, x))
             board[ny][nx].reachable = true;
     }
+}
+
+function isKingAttacked(co){
+    let y,x;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if ((co && board[i][j].piece === "wk") || (!co && board[i][j].piece === "bk"))
+            {
+                y = i;
+                x = j;
+            }
+        }
+    }
+    return isInDanger(y, x, co);
 }

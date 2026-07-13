@@ -56,6 +56,7 @@ img {
 #turn{
     width: 20px;
     height: 20px;
+    border: 3px solid black;
 }
 
 #board {
