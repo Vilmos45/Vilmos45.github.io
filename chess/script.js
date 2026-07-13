@@ -1,8 +1,19 @@
+import { moveb, movep, moveq, mover, movek, moven } from "./moves.js";
+export {board, turn};
+
+window.chosedfp = chosedfp;
+
 const boardElement = document.getElementById("board");
 const turnElement = document.getElementById("turn");
+
+const pfpawn = document.getElementsByClassName("pfpawn");
+
+const wcap = document.getElementById("wcap");
+const bcap = document.getElementById("bcap");
 //should make a save board button, and a load one
 let turn = true;//true = white; false = black
 let cpiece = {piece: null, y: null, x: null};
+let chosedPiecefp;
 
 const board = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
@@ -15,7 +26,6 @@ const board = [
     [{piece: "wr", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wq", reachable: false, moved: false},{piece: "wk", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wr", reachable: false, moved: false}]
 ];
 //piece, reachable, moved
-
 
 const pieceNames = {
     wp: "white_pawn",
@@ -32,6 +42,7 @@ const pieceNames = {
     bq: "black_queen",
     bk: "black_king"
 };
+
 
 function renderBoard() {
     boardElement.innerHTML = "";
@@ -78,19 +89,52 @@ function setNotReachable(){
     }
 }
 
-function mgReachableCell(x, y){
+function listdisplay(list, ev){
+    for (let i = 0; i < list.length; i++) {
+        list[i].style.display = ev;
+    }
+}
+
+function choosePawn() {
+    listdisplay(pfpawn, "block");
+
+    return new Promise(resolve => {
+        chosedPiecefp = resolve;
+    });
+}
+
+function chosedfp(c) {
+    console.log("choosed: " + c + " for pawn");
+    listdisplay(pfpawn, "none");
+    chosedPiecefp(c);
+}
+
+async function mgReachableCell(x, y){
     board[cpiece.y][cpiece.x].piece = null;
+    if (board[y][x].piece != null){
+        const img = document.createElement("img");
+        img.src = `src/pieces/${pieceNames[board[y][x].piece]}.png`;
+        img.alt = board[y][x].piece;
+        if (board[y][x].piece.charAt(0) === "w")
+            wcap.appendChild(img);
+        else
+            bcap.appendChild(img);
+    }
+
     board[y][x].piece = cpiece.piece;
     board[y][x].moved = true;
+
+    if (cpiece.piece.charAt(1) === "p" && ((isWhitePiece(cpiece.piece) && y === 0) || (!isWhitePiece(cpiece.piece) && y === 7))){
+        listdisplay(pfpawn, "block");
+        const piece = await choosePawn();
+        board[y][x].piece = cpiece.piece.charAt(0) + piece;
+        console.log(cpiece.piece.charAt(0) + piece);
+    }
     if (y === 7 && cpiece.piece.charAt(1) === "p")
         userChosePieceForPawn(x, y);
     turn = !turn;
     setNotReachable();
     render();
-}
-
-function isWhite(y, x) {
-    return board[y][x].piece?.charAt(0) === "w";
 }
 
 function isWhitePiece(piece) {
@@ -107,14 +151,24 @@ function manageClick(cell, piece, x, y){
     cpiece.piece = piece;
     cpiece.x = x;
     cpiece.y = y;
-    switch (piece) {
-        case "wp":
-        case "bp":
+    switch (piece.charAt(1)) {
+        case "p":
             movep(x, y);
             break;
-        case "wr":
-        case "br":
+        case "n":
+            moven(x, y);
+            break;
+        case "b":
+            moveb(x, y);
+            break;
+        case "r":
             mover(x, y);
+            break;
+        case "q":
+            moveq(x, y);
+            break;
+        case "k":
+            movek(x, y);
             break;
         default:
             return;
@@ -135,60 +189,3 @@ function render(){
 }
 
 render();
-
-
-function movep(x, y){
-    let co = isWhite(y, x);
-    let dir = co ? -1 :  1;
-
-    if (board[y + dir][x].piece === null){
-        if (!board[y][x].moved && board[y + dir * 2][x].piece === null)
-            board[y + dir * 2][x].reachable = true;
-        board[y + dir][x].reachable = true;
-    }
-    if (x > 0 && board[y+dir][x-1].piece != null && co != isWhite(y+dir, x-1))
-        board[y+dir][x-1].reachable = true;
-    if (x < 7 && board[y+dir][x+1].piece != null && co != isWhite(y+dir, x+1))
-        board[y+dir][x+1].reachable = true;
-}
-
-function mover(x, y){
-    let co = isWhite(y, x);
-
-    for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
-        if (board[y][xi].piece === null)
-            board[y][xi].reachable = true;
-        else{
-            if (co != isWhite(y, xi))
-                board[y][xi].reachable = true;
-            break;
-        }
-    }
-    for (let xi = x - 1; xi >= 0; xi--) {
-        if (board[y][xi].piece === null)
-            board[y][xi].reachable = true;
-        else{
-            if (co != isWhite(y, xi))
-                board[y][xi].reachable = true;
-            break;
-        }
-    }
-    for (let yi = y + 1; yi < 8; yi++) {
-        if (board[yi][x].piece === null)
-            board[yi][x].reachable = true;
-        else{
-            if (co != isWhite(yi, x))
-                board[yi][x].reachable = true;
-            break;
-        }
-    }
-    for (let yi = y - 1; yi >= 0; yi--) {
-        if (board[yi][x].piece === null)
-            board[yi][x].reachable = true;
-        else{
-            if (co != isWhite(yi, x))
-                board[yi][x].reachable = true;
-            break;
-        }
-    }
-}
