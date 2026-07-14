@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="settings.css">
     <link rel="icon" type="image/x-icon" href="src/pawn_ico.png">
+    <script type="module" src="save.js" defer></script>
     <title>Chess>Menu</title>
 </head>
 <body>
-    <a id="play" href="game.html">Play</a>
-    <label for="white">White: </label>
-    <input type="radio" id="white" name="white" onchange="saveSettings()">
-    <label for="black">Black: </label>
-    <input type="radio" id="black" name="black" onchange="saveSettings()">
+    <div class="menuButtons">
+        <a id="play" onclick="resetGame()">Play</a>
+        <div id="load" class="ownButton" onclick="continueGame()">Load Game</div>
+    </div>
 </body>
 </html>

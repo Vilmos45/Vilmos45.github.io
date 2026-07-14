@@ -1,16 +1,38 @@
-export {moveb, movep, moveq, mover, movek, moven, isKingAttacked};
-import {board, turn, isInDanger} from "./script.js";
+export {movePiece};
+import {board, turn, isWhite} from "./script.js";
+import { isInDanger } from "./attacks.js";
 
 function logCount(){
     console.log(board.flat().filter(c => c.reachable).length);
 }
 
-function isWhite(y, x) {
-    return board[y][x].piece?.charAt(0) === "w";
-}
-
 function isAvailable(y, x, y1, x1){
     return board[y][x].piece === null || isWhite(y, x) != isWhite(y1, x1);
+}
+
+function movePiece(p, x, y){
+    switch (p.charAt(1)) {
+        case "p":
+            movep(x, y);
+            break;
+        case "n":
+            moven(x, y);
+            break;
+        case "b":
+            moveb(x, y);
+            break;
+        case "r":
+            mover(x, y);
+            break;
+        case "q":
+            moveq(x, y);
+            break;
+        case "k":
+            movek(x, y);
+            break;
+        default:
+            return;
+    }
 }
 
 function movep(x, y){
@@ -210,18 +232,4 @@ function moven(x, y){
           isAvailable(ny, nx, y, x))
             board[ny][nx].reachable = true;
     }
-}
-
-function isKingAttacked(co){
-    let y,x;
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            if ((co && board[i][j].piece === "wk") || (!co && board[i][j].piece === "bk"))
-            {
-                y = i;
-                x = j;
-            }
-        }
-    }
-    return isInDanger(y, x, co);
 }

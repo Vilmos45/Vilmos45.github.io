@@ -1,3 +1,5 @@
+import { addEventListeners } from "./phoneControl.js";
+
 let sensitivity = 20; //20 by default
 let ballSpeed = 8;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
@@ -30,8 +32,6 @@ let rd = true;
 function getSettings(){
     if (localStorage.getItem("singlep") === "true")
         ai = true;
-    console.log(localStorage.getItem("singlep") + " " + ai);
-
 
     let tmp = localStorage.getItem("sens");
     if (!Number.isNaN(tmp) && Number.isInteger(tmp))
@@ -90,6 +90,8 @@ function setup(){
 
 document.addEventListener("keydown", keyDownHandler, true);
 document.addEventListener("keyup", keyUpHandler, true);
+addEventListeners();
+
 
 function keyDownHandler(e) {
     e.preventDefault();

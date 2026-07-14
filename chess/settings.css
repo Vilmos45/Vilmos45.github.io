@@ -1,3 +1,31 @@
 #play{
-    color: aqua;
+    color: rgb(164,255,255);
+    background: #007209;
+}
+
+.ownButton{
+    background: #143a5a;
+    color: rgb(164,255,255);
+}
+
+.menuButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+#play, .ownButton{
+    width: clamp(180px, 20vw, 280px);
+    height: clamp(55px, 8vh, 75px);
+    border-radius: .7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
 }

@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script type="module"  src="script.js" defer></script>
-    <script type="module" src="moves.js" defer></script>
     <link rel="icon" type="image/x-icon" href="src/pawn_ico.png">
+    <script type="module" src="script.js"  defer></script>
+    <script type="module" src="moves.js"   defer></script>
+    <script type="module" src="attacks.js" defer></script>
+    <script type="module" src="save.js" defer></script>
     <title>Chess</title>
 </head>
     <body>
     <div id="turn"></div>
-    <div id="wcap"></div>
+    <div id="wcap" class="cap"></div>
     <div id="board"></div>
-    <div id="bcap"></div>
+    <div id="bcap" class="cap"></div>
+    <div id="save" class="ownButton" onclick="saveGame()">Save</div>
     <div id="pfpawnd" class="pfpawn">
         <div class="pfpawn" onclick="chosedfp('q')"><img src="src/pieces/neutral_queen.png" alt="nq"></div>
         <div class="pfpawn" onclick="chosedfp('r')"><img src="src/pieces/neutral_rook.png" alt="nr"></div>

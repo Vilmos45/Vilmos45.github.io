@@ -1,3 +1,9 @@
+:root{
+    --cell-size: clamp(36px, 6vw, 70px);
+    --piece-size: calc(var(--cell-size) - 6px);
+    --promotion-size: calc(var(--cell-size) * 1.5);
+}
+
 *{
     box-sizing: border-box;
     overscroll-behavior: none;
@@ -6,31 +12,49 @@
 body {
     color: #c2e4ff;
     background-color: rgb(23, 39, 39);
-    display: flex block;
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0;
     padding: 1vh;
+
+    min-height: 100vh;
+    position: relative;
 }
 
 .pfpawn img{
-    width: 75px;
-    height: 75px;
+    width: var(--promotion-size);
+    height: var(--promotion-size);
 }
 
 .pfpawn{
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: none;
 }
 
 #pfpawnd{
-    z-index: 5;
-    position: absolute;
-    align-self: center;
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: 100;
+
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 15px;
     border-radius: 10px;
-    background-color: rgba(35, 163, 135, 0.95);
-    display: flex;
+
+    background-color: rgba(35,163,135,.95);
+    display: none;
 }
 
 img {
@@ -44,37 +68,52 @@ img {
     pointer-events: none;
 }
 
-.cell img {
-    width: 50px;
-    height: 50px;
+.row{
+    display: flex;
 }
 
-.row{
-    display: flex block;
+.cap{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    gap: .3rem;
+
+    width: calc(var(--cell-size) * 8);
+    min-height: calc(var(--cell-size) * .9);
 }
 
 #turn{
-    width: 20px;
-    height: 20px;
-    border: 3px solid black;
+    width: calc(var(--cell-size) * .3);
+    height: calc(var(--cell-size) * .3);
+    border: calc(var(--cell-size) * 0.06) solid black;
 }
 
-#board {
+#board{
     display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
+    grid-template-columns: repeat(8, var(--cell-size));
+    grid-template-rows: repeat(8, var(--cell-size));
+
     width: fit-content;
     border: 2px solid black;
     cursor: crosshair;
 }
 
 .cell{
-    width: 50px;
-    height: 50px;
-    background-color: #2196f3;
+    width: var(--cell-size);
+    height: var(--cell-size);
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    background-color: #2196f3;
+}
+
+.cell img{
+    width: var(--piece-size);
+    height: var(--piece-size);
 }
 
 .black{
@@ -95,4 +134,21 @@ img {
 
 .reachable.black{
     background-color: rgb(116, 116, 255);
+}
+
+#save{
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+
+    width: clamp(70px, 10vw, 120px);
+    height: clamp(35px, 5vw, 45px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: .5rem;
+    background: #143a5a;
+    cursor: pointer;
 }

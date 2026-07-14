@@ -1,5 +1,6 @@
-import { moveb, movep, moveq, mover, movek, moven, isKingAttacked} from "./moves.js";
-export {board, turn, isInDanger};
+import {movePiece} from "./moves.js";
+import {isKingAttacked, attackPiece, isInDanger} from "./attacks.js";
+export {board, turn, isWhite, setNotReachable, render, setTurn};
 
 window.chosedfp = chosedfp;
 
@@ -43,6 +44,25 @@ const pieceNames = {
     bk: "black_king"
 };
 
+const cba = [
+    "H", "G", "F", "E", "D", "C", "B", "A"
+]
+
+function setTurn(value) {
+    turn = value;
+}
+
+function isWhitePiece(piece) {
+    return piece?.charAt(0) === "w";
+}
+
+function isWhite(y, x) {
+    return board[y][x].piece?.charAt(0) === "w";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    render();
+});
 
 function renderBoard() {
     boardElement.innerHTML = "";
@@ -81,6 +101,16 @@ function renderBoard() {
     }
 }
 
+function render(){
+    if (boardElement === null || turnElement === null) return;
+    renderBoard();
+    if (turn)
+        turnElement.style.backgroundColor = "#ffffff";
+    else
+        turnElement.style.backgroundColor = "#000000";
+    turnElement.style.borderColor = (turn) ? "black" : "white";
+}
+
 function setNotReachable(){
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
@@ -96,7 +126,7 @@ function listdisplay(list, ev){
 }
 
 function choosePawn() {
-    listdisplay(pfpawn, "block");
+    listdisplay(pfpawn, "flex");
 
     return new Promise(resolve => {
         chosedPiecefp = resolve;
@@ -109,16 +139,23 @@ function chosedfp(c) {
     chosedPiecefp(c);
 }
 
+function rmFromBoard(y, x){
+    const img = document.createElement("img");
+    img.src = `src/pieces/${pieceNames[board[y][x].piece]}.png`;
+    img.alt = board[y][x].piece;
+    if (isWhite(y, x))
+        wcap.appendChild(img);
+    else
+        bcap.appendChild(img);
+}
+
 async function mgReachableCell(x, y){
     board[cpiece.y][cpiece.x].piece = null;
+
+    console.log(cpiece.piece+": "+(cba[7-cpiece.x])+", "+(8-cpiece.y)+" -> "+(cba[7-x])+", "+(8-y));
     if (board[y][x].piece != null){
-        const img = document.createElement("img");
-        img.src = `src/pieces/${pieceNames[board[y][x].piece]}.png`;
-        img.alt = board[y][x].piece;
-        if (board[y][x].piece.charAt(0) === "w")
-            wcap.appendChild(img);
-        else
-            bcap.appendChild(img);
+        console.log("X: " + board[y][x].piece);
+        rmFromBoard(y, x);
     }
 
     board[y][x].piece = cpiece.piece;
@@ -133,110 +170,36 @@ async function mgReachableCell(x, y){
         userChosePieceForPawn(x, y);
     turn = !turn;
     setNotReachable();
+    isCheckmate();
     render();
-    turnElement.style.borderColor = (turn) ? "black" : "white";
-    if (isKingAttacked(turn))
-        turnElement.style.borderColor = "red";
 }
 
-function isWhitePiece(piece) {
-    return piece?.charAt(0) === "w";
+function isCheckmate(){
+    let is = isKingAttacked(turn);
+    if (is[0]){
+        turnElement.style.borderColor = "red";
+        movek(is[2], is[1]);
+        if (board.flat().filter(c => c.reachable).length === 0 &&
+            isInDanger(cpiece.y, cpiece.x, isWhitePiece(cpiece.piece))){
+            alert("Checkmate!\n" + turn ? "black won" : "white won");
+            localStorage.removeItem("board");
+        }
+        setNotReachable();
+    }
 }
 
 function manageClick(cell, piece, x, y){
-    console.log("selected " + piece, x, y, cell);
-    if (!turn && isWhitePiece(piece))
-        return;
-    if (turn && !isWhitePiece(piece))
+    //console.info("selected: " + piece, x, y, cell);
+    if (piece === null || !turn && isWhitePiece(piece) || turn && !isWhitePiece(piece))
         return;
     setNotReachable();
     cpiece.piece = piece;
     cpiece.x = x;
     cpiece.y = y;
     movePiece(piece, x, y);
-}
-
-function movePiece(p, x, y){
-    switch (p.charAt(1)) {
-        case "p":
-            movep(x, y);
-            break;
-        case "n":
-            moven(x, y);
-            break;
-        case "b":
-            moveb(x, y);
-            break;
-        case "r":
-            mover(x, y);
-            break;
-        case "q":
-            moveq(x, y);
-            break;
-        case "k":
-            movek(x, y);
-            break;
-        default:
-            return;
-    }
     renderBoard();
 }
 
-function isWhite(y, x) {
-    return board[y][x].piece?.charAt(0) === "w";
-}
-
-function attackPiece(p, x, y){
-    if (p === null) return;
-    switch (p.charAt(1)) {
-        case "p":
-            let co = isWhite(y, x);
-            let dir = co ? -1 :  1;
-            if (y + dir >= 0 && y + dir < 8) {
-                if (x > 0)
-                    board[y + dir][x - 1].reachable = true;
-                if (x < 7)
-                    board[y + dir][x + 1].reachable = true;
-            }
-            break;
-        case "n":
-            moven(x, y);
-            break;
-        case "b":
-            moveb(x, y);
-            break;
-        case "r":
-            mover(x, y);
-            break;
-        case "q":
-            moveq(x, y);
-            break;
-        default:
-            return;
-    }
-}
-
-function render(){
-    renderBoard();
-    if (turn)
-        turnElement.style.backgroundColor = "#ffffff";
-    else
-        turnElement.style.backgroundColor = "#000000";
-}
-
-function isInDanger(y, x, co){
-    let is = false;
-    setNotReachable();
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            if (board[i][j].piece != null && isWhitePiece(board[i][j].piece) !== co &&  board[i][j].piece.charAt(1) !== "k")
-                attackPiece(board[i][j].piece, j, i);
-        }
-    }
-    if (board[y][x].reachable)
-        is = true;
-    setNotReachable();
-    return is;
-}
+console.info("script.js loaded!");
 
 render();

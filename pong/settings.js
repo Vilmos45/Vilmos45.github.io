@@ -12,7 +12,6 @@ setInterval(() => {
 }, 10000);
 
 function main(){
-    localStorage.clear();
     singlep.checked = "true";
     sens.defaultValue = "20";
     bspeed.defaultValue = "8";
