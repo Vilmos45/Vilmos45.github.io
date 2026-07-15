@@ -1,5 +1,3 @@
-import { addEventListeners } from "./phoneControl.js";
-
 let sensitivity = 20; //20 by default
 let ballSpeed = 8;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
@@ -62,6 +60,60 @@ function getSettings(){
         aiSpeed = tmp;
 }
 
+function mobileSetup(){
+    if (navigator.maxTouchPoints === 0) return;
+
+    sensitivity = sensitivity/3;
+    ballSpeed = ballSpeed/4;
+    aiSpeed = aiSpeed;
+
+    if (!ai){
+        document.getElementById("p1up").addEventListener("touchstart", e=>{
+            e.preventDefault();
+            rw = false;
+        });
+        document.getElementById("p1up").addEventListener("touchend", e=>{
+            e.preventDefault();
+            rw = true;
+        });
+
+        document.getElementById("p1down").addEventListener("touchstart", e=>{
+            e.preventDefault();
+            rs = false;
+        });
+        document.getElementById("p1down").addEventListener("touchend", e=>{
+            e.preventDefault();
+            rs = true;
+        });
+    }else{
+        document.getElementById("p1up").style.display = "none";
+        document.getElementById("p1down").style.display = "none";
+    }
+
+    document.getElementById("p2up").addEventListener("touchstart", e=>{
+        e.preventDefault();
+        ru = false;
+    });
+    document.getElementById("p2up").addEventListener("touchend", e=>{
+        e.preventDefault();
+        ru = true;
+    });
+
+    document.getElementById("p2down").addEventListener("touchstart", e=>{
+        e.preventDefault();
+        rd = false;
+    });
+    document.getElementById("p2down").addEventListener("touchend", e=>{
+        e.preventDefault();
+        rd = true;
+    });
+
+    document.getElementById("play").addEventListener("touchend", e => {
+        e.preventDefault();
+        InGame = !InGame;
+    });
+}
+
 function setup(){
     InGame = false;
     getSettings();
@@ -84,14 +136,10 @@ function setup(){
     Vy = 0;
     scoreb = 0;
     scorer = 0;
-    console.log("|---------Settings---------|\nsensitivity: " + sensitivity + "\nball speed: " + ballSpeed + "\ngame speed: " + gameSpeed + "\nmax score: " + maxScore + "\nmax time: " + maxTime+ "\nai speed: " + aiSpeed + "\n|--------------------------|");
+    console.log("|---------Settings---------|\nsensitivity: " + sensitivity + "\nball speed: " + ballSpeed + "\ngame speed: " + gameSpeed + "\nmax score: " + maxScore + "\nmax time: " + maxTime+ "\nai: " + ai + "\nai speed: " + aiSpeed + "\n|--------------------------|");
+    mobileSetup();
     console.log("Game set!");
 }
-
-document.addEventListener("keydown", keyDownHandler, true);
-document.addEventListener("keyup", keyUpHandler, true);
-addEventListeners();
-
 
 function keyDownHandler(e) {
     e.preventDefault();
@@ -298,6 +346,8 @@ function movUto1ai() {
     uto1.style.top = newTop + "px";
 }
 
+document.addEventListener("keydown", keyDownHandler, true);
+document.addEventListener("keyup", keyUpHandler, true);
 setup();
 if (maxTime > 0){
     setInterval(() => {

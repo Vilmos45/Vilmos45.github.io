@@ -109,7 +109,7 @@ body{
         gap:.5rem;
     }
 
-    .player button{
+    .player button, #play{
         width:70px;
         height:70px;
         font-size:2rem;
