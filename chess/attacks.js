@@ -1,8 +1,5 @@
 export {isKingAttacked, attackPiece, isInDanger};
-import {board, turn, isWhite, setNotReachable} from "./script.js";
-
-console.info("attack.js loaded!");
-
+import {board, isWhite, setNotReachable} from "./script.js";
 
 function isKingAttacked(co){
     let y,x;
@@ -60,8 +57,7 @@ function attackPiece(p, x, y){
 }
 
 function attackp (x, y){
-    let co = isWhite(y, x);
-    let dir = co ? -1 :  1;
+    let dir = isWhite(y, x) ? -1 :  1;
     if (y + dir >= 0 && y + dir < 8) {
         if (x > 0)
             board[y + dir][x - 1].reachable = true;
@@ -196,3 +192,6 @@ function attackn(x, y){
             board[ny][nx].reachable = true;
     }
 }
+
+
+console.info("attack.js loaded!");

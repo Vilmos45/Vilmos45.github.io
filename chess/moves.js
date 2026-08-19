@@ -1,6 +1,12 @@
-export {movePiece};
-import {board, turn, isWhite} from "./script.js";
+export {movePiece, movek, movType, resetmovTpe};
+import {board, isWhite} from "./script.js";
 import { isInDanger } from "./attacks.js";
+
+let movType = 0;
+
+function resetmovTpe(){
+    movType = 0;
+}
 
 function logCount(){
     console.log(board.flat().filter(c => c.reachable).length);
@@ -167,7 +173,7 @@ function movek(x, y){
         false, false, false
     ]
 
-    function isKing(y, x) {
+    function isKing(y, x, co) {
         if (y < 0 || y > 7 || x < 0 || x > 7)
             return false;
 
@@ -179,15 +185,15 @@ function movek(x, y){
     }
 
     function kingAround(yy, xx){
-        return isKing(yy, xx) ||
-            isKing(yy + 1, xx) ||
-            isKing(yy - 1, xx) ||
-            isKing(yy, xx + 1) ||
-            isKing(yy, xx - 1) ||
-            isKing(yy - 1, xx - 1) ||
-            isKing(yy + 1, xx + 1) ||
-            isKing(yy + 1, xx - 1) ||
-            isKing(yy - 1, xx + 1);
+        return isKing(yy, xx, co) ||
+            isKing(yy + 1, xx, co) ||
+            isKing(yy - 1, xx, co) ||
+            isKing(yy, xx + 1, co) ||
+            isKing(yy, xx - 1, co) ||
+            isKing(yy - 1, xx - 1, co) ||
+            isKing(yy + 1, xx + 1, co) ||
+            isKing(yy + 1, xx - 1, co) ||
+            isKing(yy - 1, xx + 1, co);
     }
     let i = 0;
     for (const [dy, dx] of dirs) {
@@ -209,6 +215,25 @@ function movek(x, y){
           nx >= 0 && nx < 8)
             board[ny][nx].reachable = available[i];
         i++;
+    }
+    if(board[y,x].moved === false)
+    {
+        if (co){
+            if (!board[7,0].moved && board[7,1].piece === null && board[7,2].piece === null && board[7,3].piece === null){
+                board[7,1].reachable = true;
+                movType = 1;
+            }
+            if (!board[7,7].moved && board[7,6].piece === null && board[7,5].piece === null){
+                board[7,5].reachable = true;
+                movType = 1;
+            }
+        }
+        else{
+            if (!board[0,0].moved && board[0,1].piece === null && board[0,2].piece === null && board[0,3].piece === null)
+                board[0,1].reachable = true;
+            if (!board[0,7].moved && board[0,6].piece === null && board[0,5].piece === null)
+                board[0,5].reachable = true;
+        }
     }
 }
 
@@ -233,3 +258,5 @@ function moven(x, y){
             board[ny][nx].reachable = true;
     }
 }
+
+console.info("moves.js loaded!");

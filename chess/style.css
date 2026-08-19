@@ -22,6 +22,7 @@ body {
 
     min-height: 100vh;
     position: relative;
+    overflow: hidden;
 }
 
 .pfpawn img{
@@ -88,9 +89,14 @@ img {
     width: calc(var(--cell-size) * .3);
     height: calc(var(--cell-size) * .3);
     border: calc(var(--cell-size) * 0.06) solid black;
+
+    position: fixed;
+    top: 1rem;
+    right: 97%;
 }
 
 #board{
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(8, var(--cell-size));
     grid-template-rows: repeat(8, var(--cell-size));

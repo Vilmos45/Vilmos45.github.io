@@ -1,4 +1,4 @@
-import {movePiece} from "./moves.js";
+import {movePiece, movek, movType, resetmovTpe} from "./moves.js";
 import {isKingAttacked, attackPiece, isInDanger} from "./attacks.js";
 export {board, turn, isWhite, setNotReachable, render, setTurn};
 
@@ -11,7 +11,7 @@ const pfpawn = document.getElementsByClassName("pfpawn");
 
 const wcap = document.getElementById("wcap");
 const bcap = document.getElementById("bcap");
-//should make a save board button, and a load one
+
 let turn = true;//true = white; false = black
 let cpiece = {piece: null, y: null, x: null};
 let chosedPiecefp;
@@ -19,10 +19,10 @@ let chosedPiecefp;
 const board = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
     [{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
     [{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false}],
     [{piece: "wr", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wq", reachable: false, moved: false},{piece: "wk", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wr", reachable: false, moved: false}]
 ];
@@ -44,6 +44,8 @@ const pieceNames = {
     bk: "black_king"
 };
 
+const cells = [];
+
 const cba = [
     "H", "G", "F", "E", "D", "C", "B", "A"
 ]
@@ -53,7 +55,7 @@ function setTurn(value) {
 }
 
 function isWhitePiece(piece) {
-    return piece?.charAt(0) === "w";
+    return piece?.startsWith("w");
 }
 
 function isWhite(y, x) {
@@ -64,10 +66,12 @@ window.addEventListener("DOMContentLoaded", () => {
     render();
 });
 
-function renderBoard() {
+function createBoard(){
+    if (boardElement === null) return;
     boardElement.innerHTML = "";
 
     for (let y = 0; y < 8; y++) {
+            cells[y] = [];
         for (let x = 0; x < 8; x++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
@@ -75,8 +79,28 @@ function renderBoard() {
             if ((x + y) % 2)
                 cell.classList.add("black");
 
-            cell.dataset.x = x;
-            cell.dataset.y = y;
+            cell.dataset.x = x.toString();
+            cell.dataset.y = y.toString();
+            cells[y][x] = cell;
+
+            boardElement.appendChild(cell);
+        }
+    }
+}
+
+function renderBoard() {
+    if (boardElement === null) return;
+    boardElement.innerHTML = "";
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const cell = cells[y][x];
+
+            cell.replaceChildren();
+
+            cell.classList.remove("selected", "reachable");
+            cell.removeEventListener("click", () => manageClick(cell, piece, x, y));
+            cell.removeEventListener("click", () => mgReachableCell(x, y));
 
             const piece = (board[y][x].piece === null) ? false : board[y][x].piece;
 
@@ -102,7 +126,7 @@ function renderBoard() {
 }
 
 function render(){
-    if (boardElement === null || turnElement === null) return;
+    if (turnElement === null) return;
     renderBoard();
     if (turn)
         turnElement.style.backgroundColor = "#ffffff";
@@ -134,7 +158,7 @@ function choosePawn() {
 }
 
 function chosedfp(c) {
-    console.log("choosed: " + c + " for pawn");
+    console.log("+: " + c);
     listdisplay(pfpawn, "none");
     chosedPiecefp(c);
 }
@@ -150,7 +174,9 @@ function rmFromBoard(y, x){
 }
 
 async function mgReachableCell(x, y){
+    if (cpiece.x === null || cpiece.y === null || cpiece.piece === null) return;
     board[cpiece.y][cpiece.x].piece = null;
+    board[cpiece.y][cpiece.x].moved = true;
 
     console.log(cpiece.piece+": "+(cba[7-cpiece.x])+", "+(8-cpiece.y)+" -> "+(cba[7-x])+", "+(8-y));
     if (board[y][x].piece != null){
@@ -161,24 +187,46 @@ async function mgReachableCell(x, y){
     board[y][x].piece = cpiece.piece;
     board[y][x].moved = true;
 
-    if (cpiece.piece.charAt(1) === "p" && ((isWhitePiece(cpiece.piece) && y === 0) || (!isWhitePiece(cpiece.piece) && y === 7))){
+    if (cpiece.piece.charAt(1) === "p" && (turn && y === 7) || (!turn && y === 0)){
         listdisplay(pfpawn, "block");
         const piece = await choosePawn();
         board[y][x].piece = cpiece.piece.charAt(0) + piece;
     }
-    if (y === 7 && cpiece.piece.charAt(1) === "p")
-        userChosePieceForPawn(x, y);
+
+    if (movType === 1){
+        resetmovTpe();
+        if (cpiece.x === 2 && cpiece.y === 7){
+            board[7, 0].piece = null;
+            board[7, 3].piece = "wr";
+        }
+        if (cpiece.x === 6 && cpiece.y === 7){
+            board[7,7].piece = null;
+            board[7, 5].piece = "wr";
+        }
+        if (cpiece.x === 2 && cpiece.y === 0){
+            board[0,0].piece = null;
+            board[0, 3].piece = "br";
+        }
+        if (cpiece.x === 2 && cpiece.y === 0){
+            board[0,7].piece = null;
+            board[0, 5].piece = "br";
+        }
+    }
+
     turn = !turn;
     setNotReachable();
     isCheckmate();
+    cpiece.x = null;
+    cpiece.y = null;
+    cpiece.piece = null;
     render();
 }
 
 function isCheckmate(){
     let is = isKingAttacked(turn);
-    if (is[0]){
+    if (is[0] && turnElement != null){
         turnElement.style.borderColor = "red";
-        movek(is[2], is[1]);
+        //movek(is[2], is[1]);
         if (board.flat().filter(c => c.reachable).length === 0 &&
             isInDanger(cpiece.y, cpiece.x, isWhitePiece(cpiece.piece))){
             alert("Checkmate!\n" + turn ? "black won" : "white won");
@@ -188,7 +236,7 @@ function isCheckmate(){
     }
 }
 
-function manageClick(cell, piece, x, y){
+function manageClick(piece, x, y){
     //console.info("selected: " + piece, x, y, cell);
     if (piece === null || !turn && isWhitePiece(piece) || turn && !isWhitePiece(piece))
         return;
@@ -201,5 +249,5 @@ function manageClick(cell, piece, x, y){
 }
 
 console.info("script.js loaded!");
-
+createBoard();
 render();

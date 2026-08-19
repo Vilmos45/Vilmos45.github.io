@@ -1,4 +1,4 @@
-import { board, render, turn, setTurn} from "./script.js";
+import {board, render, turn, setTurn, setNotReachable} from "./script.js";
 
 window.saveGame = saveGame;
 window.loadGame = loadGame;
@@ -34,6 +34,7 @@ function resetGame(){
 }
 
 function saveGame(){
+    setNotReachable();
     localStorage.setItem("board", JSON.stringify(board));
     localStorage.setItem("turn", turn);
     console.info("Game saved");
@@ -51,11 +52,10 @@ function loadGame() {
     board.push(...loaded);
 
     setTurn(localStorage.getItem("turn") === "true");
-
     console.info("Game loaded");
-
     return true;
 }
+
 
 console.info("save.js loaded!");
 if (document.getElementById("board")!== null){
@@ -64,7 +64,7 @@ if (document.getElementById("board")!== null){
         board.length = 0;
         board.push(...structuredClone(boardDef));
         setTurn(true);
-        saveGame(); // opcionális
+        saveGame();
     }
     else {
         loadGame();
