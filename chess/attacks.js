@@ -30,33 +30,33 @@ function isInDanger(y, x, co){
     return is;
 }
 
-function attackPiece(p, x, y){
+function attackPiece(p, y, x){
     if (p === null) return;
     switch (p.charAt(1)) {
         case "p":
-            attackp(x, y);
+            attackp(y, x);
             break;
         case "n":
-            attackn(x, y);
+            attackn(y, x);
             break;
         case "b":
-            attackb(x, y);
+            attackb(y, x);
             break;
         case "r":
-            attackr(x, y);
+            attackr(y, x);
             break;
         case "q":
-            attackq(x, y);
+            attackq(y, x);
             break;
         case "k":
-            attackk(x, y);
+            attackk(y, x);
             break;
         default:
             return;
     }
 }
 
-function attackp (x, y){
+function attackp (y, x){
     let dir = isWhite(y, x) ? -1 :  1;
     if (y + dir >= 0 && y + dir < 8) {
         if (x > 0)
@@ -66,7 +66,7 @@ function attackp (x, y){
     }
 }
 
-function attackr(x, y){
+function attackr(y, x){
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (board[y][xi].piece === null)
             board[y][xi].reachable = true;
@@ -101,7 +101,7 @@ function attackr(x, y){
     }
 }
 
-function attackb(x, y){
+function attackb(y, x){
     let yi = y + 1;
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (yi >= 8)
@@ -152,12 +152,12 @@ function attackb(x, y){
     }
 }
 
-function attackq(x, y){
-    attackb(x, y);
-    attackr(x, y);
+function attackq(y, x){
+    attackb(y, x);
+    attackr(y, x);
 }
 
-function attackk(x, y){
+function attackk(y, x){
     const dirs = [
     [-1,-1], [-1,0], [-1,1],
     [ 0,-1],         [ 0,1],
@@ -174,7 +174,7 @@ function attackk(x, y){
     }
 }
 
-function attackn(x, y){
+function attackn(y, x){
     const dirs = [
            [-2,-1],         [-2,1],
     [-1,-2],                      [-1,2],

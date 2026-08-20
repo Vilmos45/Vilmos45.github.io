@@ -15,6 +15,7 @@ const bcap = document.getElementById("bcap");
 let turn = true;//true = white; false = black
 let cpiece = {piece: null, y: null, x: null};
 let chosedPiecefp;
+let phase = 0;
 
 const board = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
@@ -114,11 +115,11 @@ function renderBoard() {
                 if (cpiece && cpiece.x === x && cpiece.y === y)
                     cell.classList.add("selected");
 
-                cell.addEventListener("click", () => manageClick(piece, x, y));
+                cell.addEventListener("click", () => manageClick(piece, y, x));
             }
             if (board[y][x].reachable === true){
                 cell.classList.add("reachable");
-                cell.addEventListener("click", () => mgReachableCell(x, y));
+                cell.addEventListener("click", () => mgReachableCell(y, x));
             }
             boardElement.appendChild(cell);
         }
@@ -173,7 +174,7 @@ function rmFromBoard(y, x){
         bcap.appendChild(img);
 }
 
-async function mgReachableCell(x, y){
+async function mgReachableCell(y, x){
     console.log(cpiece);
     if (cpiece.x === null || cpiece.y === null || cpiece.piece === null) return;
     board[cpiece.y][cpiece.x].piece = null;
@@ -220,6 +221,7 @@ async function mgReachableCell(x, y){
     cpiece.x = null;
     cpiece.y = null;
     cpiece.piece = null;
+    phase = 0;
     render();
 }
 
@@ -227,7 +229,6 @@ function isCheckmate(){
     let is = isKingAttacked(turn);
     if (is[0] && turnElement != null){
         turnElement.style.borderColor = "red";
-        //movek(is[2], is[1]);
         if (board.flat().filter(c => c.reachable).length === 0 &&
             isInDanger(cpiece.y, cpiece.x, isWhitePiece(cpiece.piece))){
             alert("Checkmate!\n" + turn ? "black won" : "white won");
@@ -237,15 +238,15 @@ function isCheckmate(){
     }
 }
 
-function manageClick(piece, x, y){
+function manageClick(piece, y, x){
     const co = isWhitePiece(piece);
-    console.log(board[y, x].reachable + ", ok");
-    if (piece === null || (!turn && co) || (turn && !co) || board[y, x].reachable) return;
+    if (piece === null || (!turn && co) || (turn && !co) || phase != 0) return;
+    phase++;
     setNotReachable();
     cpiece.piece = piece;
     cpiece.x = x;
     cpiece.y = y;
-    movePiece(piece, x, y);
+    movePiece(piece, y, x);
     renderBoard();
 }
 

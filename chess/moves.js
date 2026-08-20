@@ -16,32 +16,32 @@ function isAvailable(y, x, y1, x1){
     return board[y][x].piece === null || isWhite(y, x) != isWhite(y1, x1);
 }
 
-function movePiece(p, x, y){
+function movePiece(p, y, x){
     switch (p.charAt(1)) {
         case "p":
-            movep(x, y);
+            movep(y, x);
             break;
         case "n":
-            moven(x, y);
+            moven(y, x);
             break;
         case "b":
-            moveb(x, y);
+            moveb(y, x);
             break;
         case "r":
-            mover(x, y);
+            mover(y, x);
             break;
         case "q":
-            moveq(x, y);
+            moveq(y, x);
             break;
         case "k":
-            movek(x, y);
+            movek(y, x);
             break;
         default:
             return;
     }
 }
 
-function movep(x, y){
+function movep(y, x){
     let dir = isWhite(y, x) ? -1 :  1;
 
     if (board[y + dir][x].piece === null){
@@ -55,7 +55,7 @@ function movep(x, y){
         board[y+dir][x+1].reachable = true;
 }
 
-function mover(x, y){
+function mover(y, x){
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (board[y][xi].piece === null)
             board[y][xi].reachable = true;
@@ -94,7 +94,7 @@ function mover(x, y){
     }
 }
 
-function moveb(x, y){
+function moveb(y, x){
     let yi = y + 1;
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (yi >= 8)
@@ -149,12 +149,12 @@ function moveb(x, y){
     }
 }
 
-function moveq(x, y){
-    moveb(x, y);
-    mover(x, y);
+function moveq(y, x){
+    moveb(y, x);
+    mover(y, x);
 }
 
-function movek(x, y){
+function movek(y, x){
     let co = isWhite(y, x);
     const dirs = [
     [-1,-1], [-1,0], [-1,1],
@@ -198,9 +198,13 @@ function movek(x, y){
         if (ny >= 0 && ny < 8 &&
           nx >= 0 && nx < 8 &&
           isAvailable(ny, nx, y, x) &&
-          !kingAround(ny, nx) && !isInDanger(ny, nx, co))
+          !kingAround(ny, nx) && !isInDanger(ny, nx, co)){
             available[i] = true;
             i++;
+        }
+        else{
+             available[i] = false;
+        }
     }
     i = 0;
     for (const [dy, dx] of dirs) {
@@ -232,7 +236,7 @@ function movek(x, y){
     }
 }
 
-function moven(x, y){
+function moven(y, x){
     const dirs = [
            [-2,-1],         [-2,1],
     [-1,-2],                      [-1,2],
