@@ -36,7 +36,7 @@ function resetGame(){
 function saveGame(){
     setNotReachable();
     localStorage.setItem("board", JSON.stringify(board));
-    localStorage.setItem("turn", turn);
+    localStorage.setItem("turn", turn.toString());
     console.info("Game saved");
 }
 

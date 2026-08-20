@@ -59,7 +59,7 @@ function isWhitePiece(piece) {
 }
 
 function isWhite(y, x) {
-    return board[y][x].piece?.charAt(0) === "w";
+    return board[y][x].piece?.startsWith("w");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -99,7 +99,7 @@ function renderBoard() {
             cell.replaceChildren();
 
             cell.classList.remove("selected", "reachable");
-            cell.removeEventListener("click", () => manageClick(cell, piece, x, y));
+            cell.removeEventListener("click", () => manageClick(piece, x, y));
             cell.removeEventListener("click", () => mgReachableCell(x, y));
 
             const piece = (board[y][x].piece === null) ? false : board[y][x].piece;
@@ -114,7 +114,7 @@ function renderBoard() {
                 if (cpiece && cpiece.x === x && cpiece.y === y)
                     cell.classList.add("selected");
 
-                cell.addEventListener("click", () => manageClick(cell, piece, x, y));
+                cell.addEventListener("click", () => manageClick(piece, x, y));
             }
             if (board[y][x].reachable === true){
                 cell.classList.add("reachable");
@@ -174,6 +174,7 @@ function rmFromBoard(y, x){
 }
 
 async function mgReachableCell(x, y){
+    console.log(cpiece);
     if (cpiece.x === null || cpiece.y === null || cpiece.piece === null) return;
     board[cpiece.y][cpiece.x].piece = null;
     board[cpiece.y][cpiece.x].moved = true;
@@ -237,9 +238,9 @@ function isCheckmate(){
 }
 
 function manageClick(piece, x, y){
-    //console.info("selected: " + piece, x, y, cell);
-    if (piece === null || !turn && isWhitePiece(piece) || turn && !isWhitePiece(piece))
-        return;
+    const co = isWhitePiece(piece);
+    console.log(board[y, x].reachable + ", ok");
+    if (piece === null || (!turn && co) || (turn && !co) || board[y, x].reachable) return;
     setNotReachable();
     cpiece.piece = piece;
     cpiece.x = x;

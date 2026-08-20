@@ -8,9 +8,9 @@ function resetmovTpe(){
     movType = 0;
 }
 
-function logCount(){
+/*function logCount(){
     console.log(board.flat().filter(c => c.reachable).length);
-}
+}*/
 
 function isAvailable(y, x, y1, x1){
     return board[y][x].piece === null || isWhite(y, x) != isWhite(y1, x1);
@@ -42,8 +42,7 @@ function movePiece(p, x, y){
 }
 
 function movep(x, y){
-    let co = isWhite(y, x);
-    let dir = co ? -1 :  1;
+    let dir = isWhite(y, x) ? -1 :  1;
 
     if (board[y + dir][x].piece === null){
         if (!board[y][x].moved && board[y + dir * 2][x].piece === null)
@@ -57,8 +56,6 @@ function movep(x, y){
 }
 
 function mover(x, y){
-    let co = isWhite(y, x);
-
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (board[y][xi].piece === null)
             board[y][xi].reachable = true;
@@ -98,8 +95,6 @@ function mover(x, y){
 }
 
 function moveb(x, y){
-    let co = isWhite(y, x);
-
     let yi = y + 1;
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (yi >= 8)
@@ -238,8 +233,6 @@ function movek(x, y){
 }
 
 function moven(x, y){
-    let co = isWhite(y, x);
-
     const dirs = [
            [-2,-1],         [-2,1],
     [-1,-2],                      [-1,2],
