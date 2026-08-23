@@ -1,21 +1,17 @@
 import {movePiece, movek, movType, resetmovTpe} from "./moves.js";
 import {isKingAttacked, attackPiece, isInDanger} from "./attacks.js";
-export {board, turn, isWhite, setNotReachable, render, setTurn};
-
-window.chosedfp = chosedfp;
+export {board, turn, isWhite, setNotReachable, render, setTurn, chosedfp};
 
 const boardElement = document.getElementById("board");
 const turnElement = document.getElementById("turn");
-
 const pfpawn = document.getElementsByClassName("pfpawn");
-
 const wcap = document.getElementById("wcap");
 const bcap = document.getElementById("bcap");
 
-let turn = true;//true = white; false = black
-let cpiece = {piece: null, y: null, x: null};
-let chosedPiecefp;
-let phase = 0;
+let turn: boolean = true;//true = white; false = black
+let cpiece = {piece: "", y: -1, x: -1};
+let chosedPiecefp: any;
+let phase: number = 0;
 
 const board = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
@@ -27,9 +23,8 @@ const board = [
     [{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false}],
     [{piece: "wr", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wq", reachable: false, moved: false},{piece: "wk", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wr", reachable: false, moved: false}]
 ];
-//piece, reachable, moved
 
-const pieceNames = {
+const pieceNames: any = {
     wp: "white_pawn",
     wr: "white_rook",
     wn: "white_knight",
@@ -45,21 +40,19 @@ const pieceNames = {
     bk: "black_king"
 };
 
-const cells = [];
+const cells: any[] = [];
 
-const cba = [
-    "H", "G", "F", "E", "D", "C", "B", "A"
-]
+const cba = ["H", "G", "F", "E", "D", "C", "B", "A"];
 
-function setTurn(value) {
+function setTurn(value: boolean) {
     turn = value;
 }
 
-function isWhitePiece(piece) {
+function isWhitePiece(piece: any) {
     return piece?.startsWith("w");
 }
 
-function isWhite(y, x) {
+function isWhite(y: number, x: number) {
     return board[y][x].piece?.startsWith("w");
 }
 
@@ -144,7 +137,7 @@ function setNotReachable(){
     }
 }
 
-function listdisplay(list, ev){
+function listdisplay(list: any, ev: string){
     for (let i = 0; i < list.length; i++) {
         list[i].style.display = ev;
     }
@@ -158,13 +151,14 @@ function choosePawn() {
     });
 }
 
-function chosedfp(c) {
+function chosedfp(c: any) {
     console.log("+: " + c);
     listdisplay(pfpawn, "none");
     chosedPiecefp(c);
 }
 
-function rmFromBoard(y, x){
+function rmFromBoard(y: number, x: number){
+    if (bcap === null || wcap === null || board[y][x].piece === null) return;
     const img = document.createElement("img");
     img.src = `src/pieces/${pieceNames[board[y][x].piece]}.png`;
     img.alt = board[y][x].piece;
@@ -174,8 +168,7 @@ function rmFromBoard(y, x){
         bcap.appendChild(img);
 }
 
-async function mgReachableCell(y, x){
-    console.log(cpiece);
+async function mgReachableCell(y: number, x: number){
     if (cpiece.x === null || cpiece.y === null || cpiece.piece === null) return;
     board[cpiece.y][cpiece.x].piece = null;
     board[cpiece.y][cpiece.x].moved = true;
@@ -198,29 +191,29 @@ async function mgReachableCell(y, x){
     if (movType === 1){
         resetmovTpe();
         if (cpiece.x === 2 && cpiece.y === 7){
-            board[7, 0].piece = null;
-            board[7, 3].piece = "wr";
+            board[7][0].piece = null;
+            board[7][3].piece = "wr";
         }
         if (cpiece.x === 6 && cpiece.y === 7){
-            board[7,7].piece = null;
-            board[7, 5].piece = "wr";
+            board[7][7].piece = null;
+            board[7][5].piece = "wr";
         }
         if (cpiece.x === 2 && cpiece.y === 0){
-            board[0,0].piece = null;
-            board[0, 3].piece = "br";
+            board[0][0].piece = null;
+            board[0][3].piece = "br";
         }
         if (cpiece.x === 2 && cpiece.y === 0){
-            board[0,7].piece = null;
-            board[0, 5].piece = "br";
+            board[0][7].piece = null;
+            board[0][5].piece = "br";
         }
     }
 
     turn = !turn;
     setNotReachable();
     isCheckmate();
-    cpiece.x = null;
+    /*cpiece.x = null;
     cpiece.y = null;
-    cpiece.piece = null;
+    cpiece.piece = null;*/
     phase = 0;
     render();
 }
@@ -238,7 +231,7 @@ function isCheckmate(){
     }
 }
 
-function manageClick(piece, y, x){
+function manageClick(piece: any, y: number, x: number){
     const co = isWhitePiece(piece);
     if (piece === null || (!turn && co) || (turn && !co) || phase != 0) return;
     phase++;

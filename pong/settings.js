@@ -34,7 +34,7 @@ function saveSettings(){
     localStorage.setItem("aispeed", aispeed.value);
 
     console.log("|---------Settings---------|\nsensitivity: " + sens.value + "\nball speed: " + bspeed.value + "\ngame speed: " + gspeed.value + "\nmax score: " + mscore.value + "\nmax time: " + mtime.value + "\nai speed: " + aispeed.value + "\nsingle player: " + singlep.checked + "\n|--------------------------|");
-    console.log("game saved");
+    console.info("Game saved");
 }
 
 /*

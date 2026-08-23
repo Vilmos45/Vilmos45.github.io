@@ -1,8 +1,9 @@
 export {isKingAttacked, attackPiece, isInDanger};
 import {board, isWhite, setNotReachable} from "./script.js";
 
-function isKingAttacked(co){
-    let y,x;
+function isKingAttacked(co: boolean){
+    let y: number = -1;
+    let x: number = -1;
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             if ((co && board[i][j].piece === "wk") || (!co && board[i][j].piece === "bk"))
@@ -15,12 +16,12 @@ function isKingAttacked(co){
     return [isInDanger(y, x, co), y, x];
 }
 
-function isInDanger(y, x, co){
+function isInDanger(y: number, x: number, co: boolean){
     let is = false;
     setNotReachable();
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            if (board[i][j].piece != null && isWhite(i, j) !== co &&  board[i][j].piece.charAt(1) !== "k")
+            if (board[i][j].piece != null && isWhite(i, j) !== co &&  board[i][j].piece?.charAt(1) !== "k")
                 attackPiece(board[i][j].piece, j, i);
         }
     }
@@ -30,7 +31,7 @@ function isInDanger(y, x, co){
     return is;
 }
 
-function attackPiece(p, y, x){
+function attackPiece(p: any, y: number, x: number){
     if (p === null) return;
     switch (p.charAt(1)) {
         case "p":
@@ -56,7 +57,7 @@ function attackPiece(p, y, x){
     }
 }
 
-function attackp (y, x){
+function attackp (y: number, x: number){
     let dir = isWhite(y, x) ? -1 :  1;
     if (y + dir >= 0 && y + dir < 8) {
         if (x > 0)
@@ -66,7 +67,7 @@ function attackp (y, x){
     }
 }
 
-function attackr(y, x){
+function attackr(y: number, x: number){
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (board[y][xi].piece === null)
             board[y][xi].reachable = true;
@@ -101,7 +102,7 @@ function attackr(y, x){
     }
 }
 
-function attackb(y, x){
+function attackb(y: number, x: number){
     let yi = y + 1;
     for (let xi = x + 1; xi < 8; xi++) {//the same code 4x
         if (yi >= 8)
@@ -152,13 +153,13 @@ function attackb(y, x){
     }
 }
 
-function attackq(y, x){
+function attackq(y: number, x: number){
     attackb(y, x);
     attackr(y, x);
 }
 
-function attackk(y, x){
-    const dirs = [
+function attackk(y: number, x: number){
+    const dirs: number[][] = [
     [-1,-1], [-1,0], [-1,1],
     [ 0,-1],         [ 0,1],
     [ 1,-1], [ 1,0], [ 1,1]
@@ -174,11 +175,11 @@ function attackk(y, x){
     }
 }
 
-function attackn(y, x){
+function attackn(y: number, x: number){
     const dirs = [
            [-2,-1],         [-2,1],
     [-1,-2],                      [-1,2],
-                 /*  */
+
     [1,-2],                       [1,2],
           [2,-1],           [2,1]
     ];

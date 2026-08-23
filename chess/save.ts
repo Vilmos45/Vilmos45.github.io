@@ -1,17 +1,24 @@
-import {board, render, turn, setTurn, setNotReachable} from "./script.js";
+import {board, render, turn, setTurn, setNotReachable, chosedfp} from "./script.js";
+
+declare global {
+    interface Window {
+        saveGame: any,
+        continueGame: any,
+        chosedfp: any;
+    }
+}
 
 window.saveGame = saveGame;
-window.loadGame = loadGame;
-window.resetGame = resetGame;
 window.continueGame = continueGame;
+window.chosedfp = chosedfp;
 
 const boardDef = [
     [{piece: "br", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bq", reachable: false, moved: false},{piece: "bk", reachable: false, moved: false},{piece: "bb", reachable: false, moved: false},{piece: "bn", reachable: false, moved: false},{piece: "br", reachable: false, moved: false}],
     [{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false},{piece: "bp", reachable: false, moved: false}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
-    [{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null},{piece: null, reachable: false, moved: null}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
+    [{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true},{piece: null, reachable: false, moved: true}],
     [{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false},{piece: "wp", reachable: false, moved: false}],
     [{piece: "wr", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wq", reachable: false, moved: false},{piece: "wk", reachable: false, moved: false},{piece: "wb", reachable: false, moved: false},{piece: "wn", reachable: false, moved: false},{piece: "wr", reachable: false, moved: false}]
 ];
@@ -21,7 +28,7 @@ function continueGame() {
         sessionStorage.setItem("action", "load");
     } else {
         alert("There's no saved game to load.");
-        console.warn("no saved game to load");
+        console.warn("No saved game to load");
     }
     location.href = "game.html";
 }
@@ -72,6 +79,9 @@ if (document.getElementById("board")!== null){
     sessionStorage.removeItem("action");
     render();
 }
+
+document.getElementById("play")?.addEventListener("click", resetGame);
+document.getElementById("load")?.addEventListener("click", loadGame);
 
 if (document.getElementById("board") !== null){
     setInterval(() => {
