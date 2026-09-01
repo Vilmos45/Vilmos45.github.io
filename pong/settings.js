@@ -13,12 +13,12 @@ setInterval(() => {
 
 function main(){
     singlep.checked = "true";
-    sens.defaultValue = "20";
-    bspeed.defaultValue = "8";
-    gspeed.defaultValue = "270";
-    mscore.defaultValue = "10";
-    mtime.defaultValue = "-1";
-    aispeed.defaultValue = "3.25";
+    sens.defaultValue = "25";
+    bspeed.defaultValue = "10";
+    gspeed.defaultValue = "250";
+    mscore.defaultValue = "5";
+    mtime.defaultValue = "-1"; //time in seconds
+    aispeed.defaultValue = "1.5";
 }
 
 function saveSettings(){

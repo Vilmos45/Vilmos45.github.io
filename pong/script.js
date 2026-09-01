@@ -1,5 +1,5 @@
 let sensitivity = 20; //20 by default
-let ballSpeed = 8;   //25 by default
+let ballSpeed = 25;   //25 by default
 let gameSpeed = 270;  //270 by default (lower values, makes the game slower)
 let maxScore = 10; //10 by default
 let maxTime = -1; //-1 by default, means unlimited
@@ -138,6 +138,7 @@ function setup(){
     scorer = 0;
     console.log("|---------Settings---------|\nsensitivity: " + sensitivity + "\nball speed: " + ballSpeed + "\ngame speed: " + gameSpeed + "\nmax score: " + maxScore + "\nmax time: " + maxTime+ "\nai: " + ai + "\nai speed: " + aiSpeed + "\n|--------------------------|");
     mobileSetup();
+    setTimer();
     console.log("Game set!");
 }
 
@@ -289,10 +290,10 @@ function movBall() {
         {
             console.log("Red won: " + scoreb + ":" + scorer);
             if (ai)
-                sendAlert("!You won!\n" + scoreb + ":" + scorer);
+                sendAlert("You won!\n" + scoreb + ":" + scorer);
             else
                 sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
-            setup;
+            setup();
         }
         newLeft = (GameScreen.clientWidth - labda.offsetWidth) / 2;
         newTop = (GameScreen.clientHeight - labda.offsetHeight) / 2;
@@ -310,7 +311,7 @@ function movBall() {
                 sendAlert("You lost\n" + scoreb + ":" + scorer);
             else
                 sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
-            setup;
+            setup();
         }
         newLeft = (GameScreen.clientWidth - labda.offsetWidth) / 2;
         newTop = (GameScreen.clientHeight - labda.offsetHeight) / 2;
@@ -346,34 +347,48 @@ function movUto1ai() {
     uto1.style.top = newTop + "px";
 }
 
-document.addEventListener("keydown", keyDownHandler, true);
-document.addEventListener("keyup", keyUpHandler, true);
-setup();
-if (maxTime > 0){
-    setInterval(() => {
-        if (scoreb >= maxScore)
+function setTimer(){
+    if (maxTime <= 0) return;
+    maxTime = maxTime * 2;
+    let elapsed = 0;
+
+    const timer = setInterval(() => {
+        if (!InGame) return;
+
+        elapsed += 500;
+        if(elapsed < maxTime * 1000) return;
+        clearInterval(timer);
+
+        if (scoreb > scorer)
         {
             console.log("Blue won: " + scoreb + ":" + scorer);
             if (ai)
                 sendAlert("You lost\n" + scoreb + ":" + scorer);
             else
                 sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
-            setup;
-        } else if (scorer >= maxScore)
+            setup();
+            return;
+        } else if (scorer > scoreb)
         {
             console.log("Red won: " + scoreb + ":" + scorer);
             if (ai)
-                sendAlert("!You won!\n" + scoreb + ":" + scorer);
+                sendAlert("You won!\n" + scoreb + ":" + scorer);
             else
                 sendAlert("!!!Red won!!!\n" + scoreb + ":" + scorer);
-            setup;
+            setup();
+            return;
         } else{
             console.log("Tie: " + scoreb + ":" + scorer);
-                sendAlert("!Tie!\n" + scoreb + ":" + scorer);
-            setup;
+            sendAlert("Tie!\n" + scoreb + ":" + scorer);
+            setup();
+            return;
         }
-    }, maxTime*1000);
+    }, maxTime*500);
 }
+
+document.addEventListener("keydown", keyDownHandler, true);
+document.addEventListener("keyup", keyUpHandler, true);
+setup();
 
 if (ai){
     setInterval(() => {
