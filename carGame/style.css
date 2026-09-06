@@ -1,0 +1,28 @@
+body{
+    background: green;
+    font-size: 5vh;}
+#gameScreen{
+    height: 75vh;
+    width: 50vw;
+    left: 25vw;
+    top: 7.5vh;
+    border-radius: 1%;
+    background-color: darkgreen;
+    overflow: hidden;}
+#score{
+    top: 7.5vh;
+    left: 75vw;}
+.laneSeparator{
+    width: 1%;
+    height: 140%;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(white 0 4vh,transparent 4vh 8vh);}
+img{
+    image-rendering: pixelated;
+    width: 6vw;
+    height: 18vh;
+    position: absolute;}
+#hscoret, #hscore{top: 20vh;
+    left: 75vw;
+}
+#hscore {left: 90vw;}
