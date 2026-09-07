@@ -39,7 +39,7 @@ function scroll(){
 }
 function addCar(name){
     const img = document.createElement("img");
-    img.style.top = "-120px";
+    img.style.top = "-20vh";
     img.src = `src/car${Math.floor(Math.random() * 5)}.png`;
     img.id = name;
     img.style.left = Math.floor(Math.random() * 5) * (gameScreen.clientWidth / 50 * 10.78) + "px";
