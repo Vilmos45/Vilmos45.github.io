@@ -39,14 +39,14 @@ function scroll(){
 }
 function addCar(name){
     const img = document.createElement("img");
-    img.style.top = "-20vh";
+    img.style.top = "-130vh";
     img.src = `src/car${Math.floor(Math.random() * 5)}.png`;
     img.id = name;
     img.style.left = Math.floor(Math.random() * 5) * (gameScreen.clientWidth / 50 * 10.78) + "px";
     img.speed = speed * (0.5 + Math.random() * 0.5);
     gameScreen.appendChild(img);
-    document.querySelectorAll(`#gameScreen img:not(#${name})`).forEach(e => { if (hasCollided(img.getBoundingClientRect(), e.getBoundingClientRect())){img.remove();
+    img.onload=()=>document.querySelectorAll(`#gameScreen img:not(#${name})`).forEach(e => { if (hasCollided(img.getBoundingClientRect(), e.getBoundingClientRect())){img.remove();
         return addCar(name);}});
     return img;
 }
-function hasCollided(a, b) {return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;}
+function hasCollided(a, b) {return a.left <= b.right && a.right >= b.left && a.top <= b.bottom && a.bottom >= b.top;}
